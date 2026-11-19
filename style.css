@@ -556,3 +556,59 @@ form > small { color: var(--suave); font-size: 11px; }
     transition-duration: .01ms !important;
   }
 }
+
+/* Correção de acessibilidade e feedback visual dos campos */
+input,
+select,
+textarea {
+  cursor: text;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+/* Destaque visível ao clicar ou focar um campo */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid var(--dourado) !important;
+  outline-offset: 2px;
+  border-color: var(--botao) !important;
+  box-shadow: 0 0 0 4px rgba(184, 137, 63, 0.16);
+  background-color: #FFFFFF;
+}
+
+/* Reforça o destaque do formulário de movimentações */
+#form input:focus,
+#form select:focus {
+  border-width: 2px !important;
+  border-color: var(--botao) !important;
+  outline: 3px solid var(--dourado) !important;
+  outline-offset: 2px;
+}
+
+/* Destaca também a área do campo e seu rótulo */
+#form .linha > div:focus-within label,
+#form > label:has(+ input:focus),
+#form > label:has(+ select:focus) {
+  color: var(--botao);
+}
+
+/* Mantém o feedback visível ao navegar com o teclado */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--dourado);
+  outline-offset: 3px;
+}
+
+/* Evita transições excessivas para quem prefere movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+  input,
+  select,
+  textarea {
+    transition: none;
+  }
+}
