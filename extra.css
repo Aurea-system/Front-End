@@ -1,0 +1,39 @@
+/* Complemento do style.css: usa apenas as variáveis de cor já existentes */
+.espaco { margin-bottom: 24px; }
+.cartao-topo h2 small { margin-left: 8px; font-weight: 500; }
+.grade2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.campo-mes { width: auto; }
+
+/* Filtros */
+.filtros { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 22px; border-bottom: 1px solid var(--borda); }
+.filtros input, .filtros select { width: auto; flex: 1 1 160px; }
+.filtros input[type="search"] { flex: 2 1 220px; }
+
+/* Barras de categoria */
+.barras, .orc-lista { padding: 8px 22px 20px; }
+.barra-linha, .orc-linha { padding: 12px 0; }
+.orc-linha + .orc-linha { border-top: 1px solid var(--borda); }
+.barra-info, .orc-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 13px; }
+.barra-info strong { font-weight: 600; }
+.trilho { height: 10px; margin-bottom: 6px; border-radius: 10px; background: var(--borda); overflow: hidden; }
+.preenchido { height: 100%; border-radius: 10px; background: var(--botao); transition: width .3s; }
+.preenchido.atencao { background: var(--dourado); }
+.preenchido.estourou { background: var(--despesa); }
+.barras .vazia { padding: 16px 0; }
+
+/* Orçamentos */
+.orc-campo { display: flex; align-items: center; gap: 8px; margin: 0; font-weight: 500; color: var(--suave); }
+.orc-campo input { width: 120px; min-height: 36px; }
+
+/* Botões da tabela */
+.editar { padding: 6px 10px; background: var(--creme); color: var(--texto); font-size: 12px; }
+td:last-child { white-space: nowrap; }
+
+@media (max-width: 760px) {
+  .lateral { flex-wrap: wrap; }
+  nav { flex-wrap: wrap; }
+  .grade2 { grid-template-columns: 1fr; }
+  .orc-topo { flex-direction: column; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) { .preenchido { transition: none; } }

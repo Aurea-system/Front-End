@@ -1,0 +1,372 @@
+ 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#174D3A">
+  <meta name="description" content="Áurea: organize suas finanças, acompanhe metas e analise seus gastos.">
+  <title>Áurea | Controle Financeiro</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <aside class="lateral">
+    <a href="#painel" class="marca" data-tela="painel" aria-label="Ir para o painel Áurea">
+      <svg viewBox="0 0 100 80" aria-hidden="true">
+        <path d="M50 4 76 62h-11L50 28 35 62H24z" fill="#F1EBDD"/>
+        <rect x="42" y="46" width="7" height="18" rx="1" fill="#5E9E7C"/>
+        <rect x="52" y="40" width="7" height="24" rx="1" fill="#5E9E7C"/>
+        <rect x="62" y="33" width="7" height="31" rx="1" fill="#5E9E7C"/>
+        <path d="M12 68C40 66 52 34 90 30 66 24 44 40 12 68z" fill="#B8893F"/>
+      </svg>
+      <span class="marca-texto">
+        <strong>ÁUREA</strong>
+        <small>CONTROLE FINANCEIRO</small>
+      </span>
+    </a>
+
+    <p class="nav-legenda">MENU PRINCIPAL</p>
+    <nav aria-label="Navegação principal">
+      <button class="nav ativo" data-tela="painel"><span>⌂</span> Painel financeiro</button>
+      <button class="nav" data-tela="cadastro"><span>＋</span> Movimentações</button>
+      <button class="nav" data-tela="metas"><span>◎</span> Metas financeiras</button>
+      <button class="nav" data-tela="relatorios"><span>▥</span> Relatórios</button>
+      <button class="nav" data-tela="orcamentos"><span>▤</span> Orçamentos</button>
+    </nav>
+
+    <div class="lateral-rodape">
+      <span class="status-ponto"></span>
+      Seus dados ficam neste navegador
+    </div>
+  </aside>
+
+  <main>
+    <!-- PAINEL -->
+    <section class="tela ativa" id="painel">
+      <header class="titulo">
+        <div>
+          <span class="sobretitulo">VISÃO GERAL</span>
+          <h1>Painel financeiro</h1>
+          <p>Uma visão simples para tomar decisões melhores.</p>
+        </div>
+        <button class="botao-principal" data-tela="cadastro">＋ Nova movimentação</button>
+      </header>
+
+      <div class="resumo">
+        <article class="resumo-card">
+          <div class="resumo-icone verde-claro">↗</div>
+          <span>Saldo do período</span>
+          <strong id="saldo-total">R$ 0,00</strong>
+          <small>Receitas menos despesas</small>
+        </article>
+        <article class="resumo-card">
+          <div class="resumo-icone verde-claro">＋</div>
+          <span>Receitas</span>
+          <strong class="receita" id="receitas-total">R$ 0,00</strong>
+          <small>Total de entradas</small>
+        </article>
+        <article class="resumo-card">
+          <div class="resumo-icone vermelho-claro">↘</div>
+          <span>Despesas</span>
+          <strong class="despesa" id="despesas-total">R$ 0,00</strong>
+          <small>Total de saídas</small>
+        </article>
+      </div>
+
+      <section class="cartao bloco">
+        <div class="cartao-topo">
+          <div>
+            <h2>Movimentações</h2>
+            <p class="subtexto" id="contador">Suas entradas e saídas recentes</p>
+          </div>
+          <button class="botao-secundario" data-tela="cadastro">Ver cadastro ＋</button>
+        </div>
+
+        <div class="filtros">
+          <input id="busca" type="search" placeholder="Buscar descrição..." aria-label="Buscar movimentações">
+          <select id="filtro-tipo" aria-label="Filtrar tipo">
+            <option value="Todos">Todos os tipos</option>
+            <option value="Receita">Receitas</option>
+            <option value="Despesa">Despesas</option>
+          </select>
+          <select id="filtro-categoria" aria-label="Filtrar categoria">
+            <option value="Todas">Todas as categorias</option>
+          </select>
+          <input id="filtro-mes" type="month" aria-label="Filtrar por mês">
+          <select id="ordem" aria-label="Ordenar movimentações">
+            <option value="recentes">Mais recentes</option>
+            <option value="antigas">Mais antigas</option>
+            <option value="maior">Maior valor</option>
+            <option value="menor">Menor valor</option>
+          </select>
+          <button id="limpar-filtros" class="botao-texto">Limpar</button>
+        </div>
+
+        <div class="tabela">
+          <table>
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Categoria</th>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="lista"></tbody>
+          </table>
+        </div>
+        <p class="vazia" id="vazia" hidden>Nenhuma movimentação encontrada.</p>
+      </section>
+
+      <section class="cartao bloco">
+        <div class="cartao-topo">
+          <div>
+            <h2>Despesas por categoria</h2>
+            <p class="subtexto">Veja para onde seu dinheiro está indo.</p>
+          </div>
+          <button class="botao-texto" data-tela="relatorios">Ver relatórios →</button>
+        </div>
+        <div class="barras" id="barras-painel"></div>
+      </section>
+    </section>
+
+    <!-- CADASTRO DE MOVIMENTAÇÕES -->
+    <section class="tela" id="cadastro">
+      <header class="titulo">
+        <div>
+          <span class="sobretitulo">REGISTROS</span>
+          <h1 id="form-titulo">Nova movimentação</h1>
+          <p>Registre suas receitas e despesas para manter tudo organizado.</p>
+        </div>
+      </header>
+
+      <section class="cartao formulario">
+        <form id="form">
+          <label for="tipo">Tipo de movimentação</label>
+          <select id="tipo" required>
+            <option value="">Selecione o tipo</option>
+            <option value="Receita">Receita</option>
+            <option value="Despesa">Despesa</option>
+          </select>
+
+          <label for="descricao">Descrição</label>
+          <input id="descricao" maxlength="80" placeholder="Ex.: Compra no supermercado" required>
+
+          <div class="linha">
+            <div>
+              <label for="valor">Valor (R$)</label>
+              <input id="valor" type="number" min="0.01" step="0.01" placeholder="0,00" required>
+            </div>
+            <div>
+              <label for="data">Data</label>
+              <input id="data" type="date" required>
+            </div>
+          </div>
+
+          <label for="categoria">Categoria</label>
+          <select id="categoria" required>
+            <option value="">Escolha primeiro o tipo</option>
+          </select>
+          <small id="ajuda">Escolha primeiro o tipo de movimentação.</small>
+
+          <p id="mensagem" role="status" aria-live="polite"></p>
+
+          <div class="acoes">
+            <button type="submit" id="salvar" class="botao-principal">Salvar movimentação</button>
+            <button type="reset" class="botao-secundario">Limpar</button>
+            <button type="button" class="botao-texto" data-tela="painel">Voltar ao painel</button>
+          </div>
+        </form>
+      </section>
+    </section>
+
+    <!-- MODELO 4: METAS FINANCEIRAS -->
+    <section class="tela" id="metas">
+      <header class="titulo">
+        <div>
+          <span class="sobretitulo">SEU FUTURO</span>
+          <h1>Metas financeiras</h1>
+          <p>Transforme seus planos em objetivos e acompanhe cada conquista.</p>
+        </div>
+        <button class="botao-principal" id="nova-meta">＋ Nova meta</button>
+      </header>
+
+      <div class="resumo resumo-metas">
+        <article class="resumo-card">
+          <span>Metas cadastradas</span>
+          <strong id="metas-total">0</strong>
+          <small>Seus objetivos financeiros</small>
+        </article>
+        <article class="resumo-card">
+          <span>Total guardado</span>
+          <strong id="metas-guardado">R$ 0,00</strong>
+          <small>Somatório dos valores acumulados</small>
+        </article>
+        <article class="resumo-card">
+          <span>Valor dos objetivos</span>
+          <strong id="metas-alvo">R$ 0,00</strong>
+          <small>Quanto você deseja alcançar</small>
+        </article>
+      </div>
+
+      <section class="cartao bloco" id="meta-form-card" hidden>
+        <div class="cartao-topo">
+          <div>
+            <h2 id="meta-form-titulo">Criar uma meta</h2>
+            <p class="subtexto">Defina um objetivo que faça sentido para você.</p>
+          </div>
+        </div>
+        <form id="meta-form" class="formulario-interno">
+          <label for="meta-nome">Nome da meta</label>
+          <input id="meta-nome" maxlength="70" placeholder="Ex.: Comprar um notebook" required>
+
+          <div class="linha">
+            <div>
+              <label for="meta-alvo">Valor desejado (R$)</label>
+              <input id="meta-alvo" type="number" min="0.01" step="0.01" placeholder="3000,00" required>
+            </div>
+            <div>
+              <label for="meta-atual">Quanto já guardou (R$)</label>
+              <input id="meta-atual" type="number" min="0" step="0.01" value="0" required>
+            </div>
+          </div>
+
+          <label for="meta-prazo">Prazo desejado</label>
+          <input id="meta-prazo" type="date">
+
+          <p id="meta-mensagem" role="status" aria-live="polite"></p>
+          <div class="acoes">
+            <button class="botao-principal" type="submit" id="meta-salvar">Salvar meta</button>
+            <button class="botao-secundario" type="button" id="meta-cancelar">Cancelar</button>
+          </div>
+        </form>
+      </section>
+
+      <div class="secao-titulo">
+        <h2>Seus objetivos</h2>
+        <span class="subtexto">Acompanhe seu progresso</span>
+      </div>
+      <div class="metas-grid" id="metas-lista"></div>
+      <p class="vazia" id="metas-vazia" hidden>Você ainda não criou metas. Comece com um objetivo pequeno e possível.</p>
+    </section>
+
+    <!-- MODELO 5: RELATÓRIOS -->
+    <section class="tela" id="relatorios">
+      <header class="titulo">
+        <div>
+          <span class="sobretitulo">ANÁLISE FINANCEIRA</span>
+          <h1>Relatórios</h1>
+          <p>Entenda seus hábitos financeiros e acompanhe sua evolução.</p>
+        </div>
+        <button class="botao-principal" id="btn-csv">↓ Exportar CSV</button>
+      </header>
+
+      <div class="filtros filtros-relatorio">
+        <label for="rel-mes">Analisar mês</label>
+        <input id="rel-mes" type="month">
+        <button class="botao-secundario" id="rel-todos">Ver todo o período</button>
+      </div>
+
+      <div class="resumo">
+        <article class="resumo-card">
+          <span>Maior despesa do período</span>
+          <strong id="rel-maior">R$ 0,00</strong>
+          <small id="rel-maior-desc">Nenhuma despesa registrada</small>
+        </article>
+        <article class="resumo-card">
+          <span>Média das despesas</span>
+          <strong id="rel-media">R$ 0,00</strong>
+          <small>Por movimentação de despesa</small>
+        </article>
+        <article class="resumo-card">
+          <span>Taxa de economia</span>
+          <strong id="rel-economia">—</strong>
+          <small>Saldo em relação às receitas</small>
+        </article>
+      </div>
+
+      <div class="relatorios-grid">
+        <section class="cartao bloco">
+          <div class="cartao-topo">
+            <div>
+              <h2>Receitas x despesas</h2>
+              <p class="subtexto">Comparação dos valores por mês.</p>
+            </div>
+          </div>
+          <div class="barras" id="barras-comparacao"></div>
+        </section>
+
+        <section class="cartao bloco">
+          <div class="cartao-topo">
+            <div>
+              <h2>Despesas por categoria</h2>
+              <p class="subtexto">Categorias que concentram seus gastos.</p>
+            </div>
+          </div>
+          <div class="barras" id="barras-despesas"></div>
+        </section>
+
+        <section class="cartao bloco">
+          <div class="cartao-topo">
+            <div>
+              <h2>Receitas por categoria</h2>
+              <p class="subtexto">De onde vem seu dinheiro.</p>
+            </div>
+          </div>
+          <div class="barras" id="barras-receitas"></div>
+        </section>
+
+        <section class="cartao bloco">
+          <div class="cartao-topo">
+            <div>
+              <h2>Resumo mensal</h2>
+              <p class="subtexto">Entradas, saídas e saldo de cada mês.</p>
+            </div>
+          </div>
+          <div class="tabela">
+            <table>
+              <thead>
+                <tr><th>Mês</th><th>Receitas</th><th>Despesas</th><th>Saldo</th></tr>
+              </thead>
+              <tbody id="lista-meses"></tbody>
+            </table>
+          </div>
+          <p class="vazia" id="meses-vazio" hidden>Não há dados para exibir.</p>
+        </section>
+      </div>
+    </section>
+
+    <!-- ORÇAMENTOS -->
+    <section class="tela" id="orcamentos">
+      <header class="titulo">
+        <div>
+          <span class="sobretitulo">PLANEJAMENTO</span>
+          <h1>Orçamentos</h1>
+          <p>Defina limites por categoria e evite gastar além do planejado.</p>
+        </div>
+      </header>
+
+      <section class="cartao bloco">
+        <div class="cartao-topo">
+          <div>
+            <h2>Limites mensais</h2>
+            <p class="subtexto">Os gastos são calculados a partir das suas movimentações.</p>
+          </div>
+          <input id="orc-mes" type="month" aria-label="Mês do orçamento">
+        </div>
+        <div class="orc-lista" id="orc-lista"></div>
+        <div class="orc-rodape" id="orc-resumo"></div>
+      </section>
+    </section>
+
+    <footer class="rodape">
+      <span>ÁUREA</span>
+      <span>Organização financeira com clareza e equilíbrio.</span>
+      <button class="botao-texto perigo-texto" id="btn-apagar">Apagar todos os dados</button>
+    </footer>
+  </main>
+</body>
+</html>
